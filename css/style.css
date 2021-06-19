@@ -1,0 +1,89 @@
+@import "_header.css";
+@import "_log.css";
+@import "_main.css";
+@import "_parser.css";
+@import "_modules.css";
+@import "_aside.css";
+@import "_login.css";
+@import "_registration.css";
+
+:root {
+    --background-color: #CFE4F2;
+    --text-color: #333;
+    --font-weight: 500;
+    --font-size: 15px;
+}
+
+*{
+    font-family: Montserrat, serif;
+    font-weight: 400;
+    text-decoration: none;
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.header-login-register{
+    width: 30%;
+    margin: 50px auto 0;
+    color: white;
+    background: #5F9EA0;
+    text-align: center;
+    border: 1px solid #B0C4DE;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    padding: 20px;
+display: flex;
+    flex-direction: row;
+
+}
+#form--login, .content {
+    width: 30%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #B0C4DE;
+    background: white;
+    border-radius: 0 0 10px 10px;
+}
+.input-group {
+    margin: 10px 0 10px 0;
+}
+.input-group label {
+    display: block;
+    text-align: left;
+    margin: 3px;
+}
+.input-group input {
+    height: 30px;
+    width: 93%;
+    padding: 5px 10px;
+    font-size: 15px;
+    border-radius: 10px;
+    border: 1px solid gray;
+}
+.btn {
+    padding: 15px 20px;
+    font-size: 15px;
+    color: white;
+    background: #5F9EA0;
+    border: none;
+    border-radius: 10px;
+}
+.error {
+    width: 92%;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #a94442;
+    color: #a94442;
+    background: #f2dede;
+    border-radius: 10px;
+    text-align: left;
+}
+.success {
+    color: #3c763d;
+    background: #dff0d8;
+    border: 1px solid #3c763d;
+    margin-bottom: 20px;
+}

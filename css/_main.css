@@ -1,0 +1,20 @@
+main{
+    display: grid;
+    grid-template-columns: 20vw 60vw 20vw;
+    grid-template-rows: 80vh auto;
+    grid-template-areas:
+            ". parser aside"
+            ". about-us ."
+            "footer footer footer";
+
+    grid-row-gap: 50px;
+    grid-column-gap: 10px;
+
+    padding-top: 50px;
+}
+
+aside{ grid-area: aside; }
+footer{ grid-area: footer;}
+.parser{ grid-area: parser; }
+.about-us{ grid-area: about-us; }
+

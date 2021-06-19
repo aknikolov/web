@@ -1,0 +1,91 @@
+.overlay{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+.display-log{
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    grid-template-areas:
+        ". convert-from convert-to log .";
+    z-index: 3;
+    height: 100vh;
+    align-items: center;
+}
+
+
+/* display-log close button */
+.log{
+    position: relative;
+}
+
+#close-button,
+#clear-log{
+    position: absolute;
+}
+
+#close-button{
+    right: 20px;
+
+    width: 20px;
+}
+
+#clear-log{
+    bottom: 20px;
+    right: 20px;
+
+    width: 20%;
+}
+
+.display-log .options{
+
+}
+
+.display-log .options button{
+    margin-left: 20px;
+    padding: 15px 10px;
+    width: 30%;
+}
+
+.convert-from, .convert-to{
+    background-color: white;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+
+    gap: 20px;
+}
+
+.display-log .parser-header{
+    padding-bottom: 0px;
+}
+
+
+.convert-from{
+    grid-area: convert-from;
+}
+
+.log{
+    grid-area: log;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 20px;
+    box-shadow: -1px 0px 2px 0px gray;
+    background-color: white;
+}
+
+.convert-to{
+    grid-area: convert-to;
+}

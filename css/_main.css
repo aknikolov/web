@@ -1,11 +1,9 @@
 main{
     display: grid;
     grid-template-columns: 20vw 60vw 20vw;
-    grid-template-rows: 80vh auto;
+    grid-template-rows: 80vh;
     grid-template-areas:
-            ". parser aside"
-            ". about-us ."
-            "footer footer footer";
+            ". parser aside";
 
     grid-row-gap: 50px;
     grid-column-gap: 10px;

@@ -25,24 +25,40 @@
 /* display-log close button */
 .log{
     position: relative;
+    widht: 30vw;
 }
 
 #close-button,
-#clear-log{
+.log-other-options-container
+{
     position: absolute;
 }
 
-#close-button{
-    right: 20px;
 
+#close-button{
     width: 20px;
+
+    /* position */
+    right: 20px;
 }
 
-#clear-log{
-    bottom: 20px;
+.log-other-options-container{
+    bottom: 23px;
     right: 20px;
+}
 
-    width: 20%;
+.log-other-options-container button{
+    padding: 15px 20px;
+    margin-left: 30px;
+}
+
+#log-parse-arrow{
+    position: absolute;
+    top: 30%;
+    left: -15px;
+
+    font-size: 2.5rem;
+    color: var(--background-color);
 }
 
 .display-log .options{
@@ -64,6 +80,8 @@
     padding: 20px;
 
     gap: 20px;
+
+    position: relative;
 }
 
 .display-log .parser-header{
@@ -83,7 +101,7 @@
     text-align: left;
     padding: 20px;
     box-shadow: -1px 0px 2px 0px gray;
-    background-color: white;
+    background-color: var(--background-color);
 }
 
 .convert-to{

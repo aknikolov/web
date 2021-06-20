@@ -1,18 +1,18 @@
 .parser{
     display: grid;
-    grid-template-columns: 45% 10% 45%;
+    grid-template-columns: 33% 33% 33%;
     grid-template-rows: 0.1fr auto;
     grid-template-areas:
         "info-block info-block info-block"
-        "yaml-block mid-block json-block";
+        "parser-left-block mid-block parser-right-block";
 }
 .info-block{ grid-area: info-block; }
-.yaml-block{ grid-area: yaml-block; }
-.json-block{ grid-area: json-block; }
+.parser-left-block{ grid-area: parser-left-block; }
+.parser-right-block{ grid-area: parser-right-block; }
 .mid-block{ grid-area: mid-block; }
 
-.yaml-block,
-.json-block{
+.parser-left-block,
+.parser-right-block{
     background-color: var(--background-color);
     color: var(--text-color);
 
@@ -28,7 +28,7 @@
 #log-button{
     position: absolute;
     top: 10px;
-    right: 0px;
+    right: 0;
 }
 
 .mid-block{
@@ -51,6 +51,17 @@
     padding-bottom: 20px;
 }
 
+.parse-buttons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+.parse-buttons label{
+    margin-left: 10px;
+}
+
 .parser_options{
     display: inline-flex;
     align-items: center;
@@ -71,10 +82,15 @@
     font-size: 115%;
 }
 
-.parser-header{
-    display: inline-flex;
+.parser-header,
+.parser-header label{
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: left;
+}
+
+.parser-header{
+    gap: 10px;
 }
 
 .parse-buttons{
@@ -86,3 +102,8 @@
     right: -50px;
     top: -50px;
 }
+
+.parser-hide-yaml{
+    display: none;
+}
+

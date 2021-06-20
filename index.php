@@ -20,6 +20,9 @@ if (isset($_GET['logout'])) {
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script type="text/javascript" src="JS/basic_functions.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.js"
+            integrity="sha512-CwxrLIN0dww6lRc/oKeZiI9oGlOob2HPMU0Yu0g+P3/G1cuTii+tt0jpyEKhilfrV7D/zmvKiVPIHUDU6xbBxg=="
+            crossOrigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
@@ -27,12 +30,15 @@ if (isset($_GET['logout'])) {
 <div class="overlay" id="overL" style="display: none">
     <div class="display-log">
         <div class="log">
-            <button id="close-button" onclick="close_log()">X</button>
+            <a id="close-button" onclick="close_log()"><i class="fa fa-times"></i></a>
             <h2>Log:</h2>
             <?php
-            echo "12:45:32 12.06.2021 YAML to JSON"
+            echo    "12:45:32 12.06.2021 YAML to JSON"
             ?>
-            <button id="clear-log" onclick="alert('Do you want to continue?')">clear log</button>
+            <div class="log-other-options-container">
+                <button id="download-log"><i class="fa fa-download"></i> download log</button>
+                <button id="clear-log" onclick="alert('Do you want to continue?')">clear log</button>
+            </div>
         </div>
 
         <div class="convert-from">
@@ -53,6 +59,7 @@ if (isset($_GET['logout'])) {
                 <h2>JSON</h2>
             </div>
             <textarea id="log_textarea_json"></textarea>
+            <i id="log-parse-arrow" class="fa fa-chevron-right"></i>
             <div class="options">
                 <button onclick="copy('log_textarea_json')">Copy</button>
                 <button onclick="load('json')">Load</button>
@@ -75,7 +82,6 @@ if (isset($_GET['logout'])) {
         <?php  if (isset($_SESSION['username'])) : ?>
             <strong style="text-transform: Uppercase"><?php echo "&nbsp;", $_SESSION['username']; ?></strong>
         <?php endif ?>
-        </i>
         <a href="index.php?logout='1'" class="header">Logout</a>
     </div>
 </header>
@@ -93,15 +99,23 @@ if (isset($_GET['logout'])) {
             <button id="log-button" onclick="display_log()">View LOG <i class="fa fa-history"></i></button>
         </div>
         <div class="mid-block">
-            <button class="parse-button">JSON <i class="fa fa-arrow-right"></i></button>
-            <button class="parse-button"><i class="fa fa-arrow-left"></i> YAML</button>
+            <button class="parse-button">Parse <i class="fa fa-arrow-right"></i></button>
 
         </div>
 
-        <div class="yaml-block" >
+        <div class="parser-left-block" >
             <div class="parser-header">
-                <img height="40px" src="http://localhost/img/yaml_icon.png" alt="yaml_logo">
-                <h2>YAML</h2>
+                <label for="rb-yaml">
+                    <img height="40px" src="http://localhost/img/yaml_icon.png" alt="yaml_logo">
+                    <h2>YAML</h2>
+                </label>
+                <input type="radio" id="rb-yaml" name="parse-to" value="yaml" checked>
+                <label for="rb-json">
+                    <img height="40px" src="http://localhost/img/json_icon.png" alt="yaml_logo">
+                    <h2>JSON</h2>
+                </label>
+                <input type="radio" id="rb-json" name="parse-to" value="json">
+
             </div>
             <div class="parser_options">
                 <button onclick="copy('container_textarea_yaml')"><i class="fa fa-copy"></i></button>
@@ -112,10 +126,12 @@ if (isset($_GET['logout'])) {
             <textarea id="container_textarea_yaml"></textarea>
          </div>
 
-        <div class="json-block">
+        <div class="parser-right-block">
             <div class="parser-header">
-                <img height="40px" src="http://localhost/img/json_icon.png" alt="yaml_logo">
-                <h2>JSON</h2>
+                <img class="parser-hide-json"  height="40px" src="http://localhost/img/json_icon.png" alt="yaml_logo">
+                <h2 class="parser-hide-json" >JSON</h2>
+                <img class="parser-hide-yaml" height="40px" src="http://localhost/img/yaml_icon.png" alt="yaml_logo">
+                <h2 class="parser-hide-yaml">YAML</h2>
             </div>
             <div class="parser_options">
                 <button onclick="copy('container_textarea_json')"><i class="fa fa-copy"></i></button>

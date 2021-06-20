@@ -5,6 +5,7 @@ textarea{
     padding: 5px;
     overflow-y: auto;
     resize: none;
+
 }
 
 .parser textarea{

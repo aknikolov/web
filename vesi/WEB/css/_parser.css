@@ -1,0 +1,174 @@
+.parser{
+    display: grid;
+    grid-template-columns: 45% 10% 45%;
+    grid-template-rows: 0.1fr auto;
+    grid-template-areas:
+        "info-block info-block info-block"
+        "parser-left-block mid-block parser-right-block";
+}
+.info-block{ grid-area: info-block; }
+.parser-left-block{ grid-area: parser-left-block; }
+.parser-right-block{ grid-area: parser-right-block; }
+.mid-block{ grid-area: mid-block; }
+
+.parser-left-block,
+.parser-right-block{
+    background-color: var(--background-color);
+    color: var(--text-color);
+
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.info-block{
+    position: relative;
+}
+
+#log-button{
+    position: absolute;
+    top: 10px;
+    right: 0;
+}
+
+.mid-block{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 20px;
+    padding-top: 20px;
+}
+
+.parse-button{
+    padding: 5px 10px;
+}
+
+.parser-header,
+.parse-buttons,
+.info-block
+{
+    padding-bottom: 20px;
+}
+
+.parse-buttons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+.parse-buttons label{
+    margin-left: 10px;
+}
+
+.parser_options{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    border: 1px #EFEFEF;
+    border-style: solid solid none solid;
+
+}
+.parser_options button{
+    width: 25%;
+    padding: 15px;
+
+    border: none;
+}
+
+.parser_options button:hover i{
+    font-size: 115%;
+}
+
+.parser-header,
+.parser-header label{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.parser-header{
+    gap: 10px;
+}
+
+.parse-buttons{
+    position: relative;
+}
+
+.parse-buttons button{
+    position: absolute;
+    right: -50px;
+    top: -50px;
+}
+
+.parser-hide-yaml{
+    display: none;
+}
+
+.download_popup{
+    background-color: var(--background-color);
+    border: 1px #333 solid;
+    position: absolute;
+    top: -10px;
+    right: -20px;
+    width: 80%;
+    height: 100px;
+
+    visibility: hidden;
+    display: flex;
+    flex-direction: row;
+
+    gap: 20px;
+    align-items: center;
+    text-align: center;
+
+    padding: 10px;
+}
+
+.download_popup button{
+    padding: 15px 20px;
+    margin: 0;
+    width: 50%;
+}
+
+.download_popup div{
+    text-align: left !important;
+}
+
+/* Пробна мобилна версия,
+ заради лошо разпределената структура на css и липсата на време */
+
+@media only screen and (max-width: 1000px){
+    .parser{
+        grid-template-columns: 100%;
+        grid-template-rows: 5% 45% 5% 45%;
+        grid-template-areas:
+        "info-block"
+        "parser-left-block"
+        "mid-block"
+        "parser-right-block";
+
+        padding: 0 10% !important;
+
+        font-size: 180%;
+    }
+
+    body>*, button, a{
+        font-size: 100%;
+    }
+
+    .info-block{
+        justify-content: left !important;
+    }
+
+    .mid-block{
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+
+

@@ -1,0 +1,30 @@
+main{
+    display: grid;
+    grid-template-columns: 15vw 70vw 15vw;
+    grid-template-rows: 80vh;
+    grid-template-areas:
+            ". parser .";
+
+    grid-row-gap: 50px;
+    grid-column-gap: 10px;
+
+    padding-top: 50px;
+}
+
+aside{ grid-area: aside; }
+footer{ grid-area: footer;}
+.parser{ grid-area: parser; }
+.about-us{ grid-area: about-us; }
+
+/* Пробна мобилна версия,
+ заради лошо разпределената структура на css и липсата на време */
+
+@media only screen and (max-width: 1000px){
+    main{
+        display: grid;
+        grid-template-columns:100vw;
+        grid-template-rows: 100vh;
+        grid-template-areas:
+            "parser";
+    }
+}

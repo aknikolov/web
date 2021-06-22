@@ -1,9 +1,14 @@
 
-
-#form--login{
+#form-login{
     border: 0.5pt black solid;
     border-top: none;
 }
+
+#form-register{
+    border: 0.5pt black solid;
+    border-top: none;
+}
+
 
 .header-login-register{
     border: 0.5pt black solid;
@@ -22,12 +27,20 @@
     flex-direction: row;
 
 }
-#form--login, .content {
+#form-login, .content {
     width: 30%;
     margin: 0 auto;
     padding: 20px;
     background: white;
 }
+
+#form-register, .content {
+    width: 30%;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+}
+
 .input-group {
     margin: 10px 0 10px 0;
 }

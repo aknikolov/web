@@ -11,58 +11,143 @@ if (isset($_GET['logout'])) {
     unset($_SESSION['username']);
     header("location: login.php");
 }
+
+/* Пробно записване на данни от парсъра
+
+$output = "";
+if(isset($_POST['comments'])){
+    $comments = $_POST['comments'];
+}
+
+if(isset($_POST['output'])){
+    $comments = $_POST['output'];
+}
+*/
+
 ?>
 <!DOCTYPE html>
-<html lang="">
+<html lang="BG">
 
 <head>
-    <title>YAML/JSON Parser</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script type="text/javascript" src="JS/basic_functions.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.js"
-            integrity="sha512-CwxrLIN0dww6lRc/oKeZiI9oGlOob2HPMU0Yu0g+P3/G1cuTii+tt0jpyEKhilfrV7D/zmvKiVPIHUDU6xbBxg=="
-            crossOrigin="anonymous" referrerpolicy="no-referrer"></script>
-</head>
 
+    <title>YAML/JSON Parser</title>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+
+    <!-- трябва интернет (не е локално), в краен вариант ще бъде локално
+          !!!Ако няма интернет иконките няма да се заредят
+    -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- не успяхме да осъществим парсването с наличните функции -->
+    <script type="text/javascript" src="./JS/yaml.js-develop/dist/yaml.js"></script>
+
+    <!-- основна логика -->
+    <script defer type="text/javascript" src="./JS/main.js"></script>
+
+    <!-- тестови стойности за парсъра -->
+    <script defer type="text/javascript" src="./JS/script.js"></script>
+
+</head>
 <body>
 
+<!-- Popup прозорец за историята на потребителя, пуска се от View LOG -->
 <div class="overlay" id="overL" style="display: none">
+    <!--wrapper-->
     <div class="display-log">
+
+        <!--Дясна колона (Показва лога на потребителя)-->
         <div class="log">
             <a id="close-button" onclick="close_log()"><i class="fa fa-times"></i></a>
             <h2>Log:</h2>
-            <?php
-            echo    "12:45:32 12.06.2021 YAML to JSON"
-            ?>
+            <div class="load_test_buttons">
+                <button onclick="test_Yaml()">Test YAML</button>
+                <button onclick="test_JSON()" >Test JSON</button>
+            </div>
+            <div class="print_log_container">
+
+                    <!-- В крайния вариант всичко ще е изнесено в отделни файлове и изчистено + оптимизирано -->
+                    <?php
+
+                    $id = end($_SESSION['id']);
+                    require_once("dbconnection.php");
+                    $db = new Db;
+                    $userLog = $db->findAllConversionsByUserId($id);
+
+                    $parseType = "";
+
+                    /* Create log record on new line */
+                    foreach ($userLog as $log) {
+
+                        //Check what type of parse/prettifier is
+                       switch($log['parseType']){
+                           case 0:
+                               $parseType = "JSON to YAML";
+                               break;
+                           case 1:
+                               $parseType = "YAML to JSON";
+                               break;
+                           case 2:
+                               $parseType = "Prettify JSON";
+                               break;
+                           case 3:
+                               $parseType = "Prettify YAML";
+                               break;
+                           default:
+                               $parseType = "Wrong parse type!";
+                       }
+
+                        $text = $log['timestamp']." ".$parseType;
+                        $id = $log['id'];
+                        echo "<button class='log_buttons' 
+                            style='
+                                background-color: white; 
+                                display: block; 
+                                width: 100%; 
+                                padding: 10px; 
+                                margin-top: 10px;
+                                '
+                            value='$id'>$text</button>";
+
+                        $data = $userLog;
+                    }
+                    ?>
+                    <script>
+                        let data = <?php
+                            echo json_encode($data);
+                            ?>;
+                    </script>
+            </div>
             <div class="log-other-options-container">
                 <button id="download-log"><i class="fa fa-download"></i> download log</button>
                 <button id="clear-log" onclick="alert('Do you want to continue?')">clear log</button>
             </div>
         </div>
 
+        <!--Лява колона-->
         <div class="convert-from">
-            <div class="parser-header">
-                <img height="40px" src="http://localhost/img/yaml_icon.png" alt="yaml_logo">
+            <div id="ph-left" class="parser-header">
+                <img height="40px" src="./img/yaml_icon.png" alt="yaml_logo">
                 <h2>YAML</h2>
             </div>
-            <textarea id="log_textarea_yaml" onchange="copy_refresh()"></textarea>
+            <textarea id="log_textarea_yaml" readonly>
+            </textarea>
             <div class="options">
-                <button onclick="copy('log_textarea_yaml')">Copy</button>
-                <button onclick="load('yaml')">Load</button>
+                <button class="copy_btn">Copy</button>
+                <button class="load_btn">Load</button>
             </div>
         </div>
 
+        <!--Лява колона-->
         <div class="convert-to">
-            <div class="parser-header">
-                <img height="40px" src="http://localhost/img/json_icon.png" alt="yaml_logo">
+            <div id="ph-right" class="parser-header">
+                <img height="40px" src="./img/json_icon.png" alt="yaml_logo">
                 <h2>JSON</h2>
             </div>
-            <textarea id="log_textarea_json"></textarea>
+            <textarea id="log_textarea_json" readonly></textarea>
             <i id="log-parse-arrow" class="fa fa-chevron-right"></i>
             <div class="options">
-                <button onclick="copy('log_textarea_json')">Copy</button>
-                <button onclick="load('json')">Load</button>
+                <button class="copy_btn">Copy</button>
+                <button class="load_btn">Load</button>
             </div>
         </div>
     </div>
@@ -77,6 +162,7 @@ if (isset($_GET['logout'])) {
         <a href="">Convertor</a>
         <a href="">За нас</a>
     </nav>
+    <!-- Печати името на потребителя -->
     <div class="user">
         <i class="fa fa-user" style="font-size: 20px"></i>
         <?php  if (isset($_SESSION['username'])) : ?>
@@ -87,143 +173,90 @@ if (isset($_GET['logout'])) {
 </header>
 
 <main>
-
-    <aside>
-
-    </aside>
-
     <section class="parser">
+        <!-- Заглавие + бутон за View LOG -->
         <div class="info-block">
             <h1>YAML/JSON Parser</h1>
             <p>Let`s parse some code!</p>
             <button id="log-button" onclick="display_log()">View LOG <i class="fa fa-history"></i></button>
         </div>
-        <div class="mid-block">
-            <button class="parse-button">Parse <i class="fa fa-arrow-right"></i></button>
 
+        <!-- Бутони и настройки: Parse, Auto save checkbox -->
+        <div class="mid-block">
+            <button onclick="parseInput(); submitForms();" class="parse-button">Parse <i class="fa fa-arrow-right"></i></button>
+            <label for="auto_save">Auto Save</label>
+            <input id="auto_save" type="checkbox">
         </div>
 
         <div class="parser-left-block" >
             <div class="parser-header">
+                <h3>Input:</h3>
                 <label for="rb-yaml">
-                    <img height="40px" src="http://localhost/img/yaml_icon.png" alt="yaml_logo">
-                    <h2>YAML</h2>
+                    <img height="40px" src="./img/yaml_icon.png" alt="yaml_logo">
+                    <p>YAML</p>
                 </label>
-                <input type="radio" id="rb-yaml" name="parse-to" value="yaml" checked>
+                <input onclick="hideOutput()" type="radio" id="rb-yaml" name="parse-to" value="yaml" checked>
                 <label for="rb-json">
-                    <img height="40px" src="http://localhost/img/json_icon.png" alt="yaml_logo">
-                    <h2>JSON</h2>
+                    <img height="40px" src="./img/json_icon.png" alt="yaml_logo">
+                    <p>JSON</p>
                 </label>
-                <input type="radio" id="rb-json" name="parse-to" value="json">
-
+                <input onclick="hideOutput()" type="radio" id="rb-json" name="parse-to" value="json">
             </div>
             <div class="parser_options">
-                <button onclick="copy('container_textarea_yaml')"><i class="fa fa-copy"></i></button>
-                <button onclick="paste('container_textarea_yaml')"><i class="fa fa-paste"></i></button>
-                <button onclick="clear('container_textarea_yaml')"><i class="fa fa-times"></i></button>
-                <button><i class="fa fa-download"></i></button>
+                <button class="copy_btn"><i style="pointer-events:none" class="fa fa-copy"></i></button>
+                <button class="paste_btn"><i style="pointer-events:none" class="fa fa-paste"></i></button>
+                <button class="clear_btn"><i style="pointer-events:none" class="fa fa-times"></i></button>
+                <button class="download_btn"><i style="pointer-events:none" class="fa fa-download"></i></button>
             </div>
+            <!-- Тествахме пращането на данни с форма
+            <form id="form1" action="" method="get">
+                <label>Additional Comments:</label><br>
+                <textarea id="container_textarea_yaml" name="comments" id="para1">
+                </textarea>
+                <input type="submit" name="button" value="Submit"/>
+            </form>
+            -->
+
             <textarea id="container_textarea_yaml"></textarea>
-         </div>
+
+        </div>
 
         <div class="parser-right-block">
             <div class="parser-header">
-                <img class="parser-hide-json"  height="40px" src="http://localhost/img/json_icon.png" alt="yaml_logo">
-                <h2 class="parser-hide-json" >JSON</h2>
-                <img class="parser-hide-yaml" height="40px" src="http://localhost/img/yaml_icon.png" alt="yaml_logo">
-                <h2 class="parser-hide-yaml">YAML</h2>
+                <h3>Output:</h3>
+                <img id="json-img" class="parser-hide-json"  height="40px" src="./img/json_icon.png" alt="yaml_logo">
+                <p id="json-h" class="parser-hide-json" >JSON</p>
+                <img id= "yaml-img" class="parser-hide-yaml" height="40px" src="./img/yaml_icon.png" alt="yaml_logo">
+                <p id = "yaml-h" class="parser-hide-yaml">YAML</p>
             </div>
             <div class="parser_options">
-                <button onclick="copy('container_textarea_json')"><i class="fa fa-copy"></i></button>
-                <button onclick="paste('container_textarea_json')"><i class="fa fa-paste"></i></button>
-                <button onclick="clear('container_textarea_json')"><i class="fa fa-times"></i></button>
-                <button><i class="fa fa-download"></i></button>
+                <button class="copy_btn"><i style="pointer-events:none" class="fa fa-copy"></i></button>
+                <button class="paste_btn"><i style="pointer-events:none" class="fa fa-paste"></i></button>
+                <button class="clear_btn"><i style="pointer-events:none" class="fa fa-times"></i></button>
+                <button class="download_btn"><i style="pointer-events:none" class="fa fa-download"></i></button>
             </div>
+
+                <!-- download functionality needs php -> form -> submit
+                <div class="download_popup">
+                    <button type="submit">get file</button>
+                    <div>
+                        <label for="link">Share Link</label>
+                        <input id="link" type="text">
+                    </div>
+                </div>
+                -->
+                <!-- Тествахме пращането на данни с форма
+                <form id="form2" action="" method="get">
+                    <label>Additional Comments:</label><br>
+                    <textarea  id="container_textarea_json" name="output">
+                    </textarea>
+                    <input type="submit" name="button" value="Submit"/>
+                </form>
+                -->
+
             <textarea id="container_textarea_json"></textarea>
         </div>
     </section>
-    <section class="about-us">За нас</section>
-    <footer>Проект по WEB</footer>
 </main>
-</div>
-
-<script type="text/javascript">
-
-    window.onload = function (){
-        document.getElementById('go').addEventListener('click', myfunc);
-
-        function myfunc(){
-            //your all code be here
-        }
-    }
-
-    function display_log() {
-        let x = document.getElementById("overL");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
-        }
-    }
-
-    function close_log() {
-        let x = document.getElementById("overL");
-
-        if (x.style.display == "block") {
-            x.style.display = "none";
-        } else {
-            x.style.display = "block";
-        }
-    }
-
-    function copy(element) {
-        let copyText = document.getElementById(element);
-
-        if(copyText.value != "")
-        {
-        copyText.select();
-        copyText.setSelectionRange(0, 99999)
-        document.execCommand("copy");
-
-        copyText.style.backgroundColor = "#CBD970";
-        copyText.style.color = "white";
-
-        setTimeout(() => {
-            copyText.style.backgroundColor = "white";
-            copyText.style.color = "black";
-            }, 1000);
-        }else{
-            alert("No data in this field!");
-        }
-    }
-
-    function paste(element) {
-        let editor = document.getElementById(element);
-
-        editor.focus();
-        editor.select();
-        document.execCommand('Paste');
-    }
-
-    function load(element){
-
-        let container_to= "container_textarea_" + element;
-        let container_from = "log_textarea_" + element;
-        let to = document.getElementById(container_to);
-        let from = document.getElementById(container_from);
-
-        to.value = from.value;
-
-        close_log();
-    }
-
-    function clear(element){
-        let x = document.getElementById(element);
-        alert(x);
-        x.value = ' ';
-    }
-
-
-</script>
 </body>
 </html>

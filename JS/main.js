@@ -3,9 +3,8 @@ document.onreadystatechange = () => {
     let state = document.readyState;
     if (state === 'complete') {
         console.log("Page load: "+state);
-        initApplication();
 
-
+       initApplication();
     }
 }
 
@@ -17,9 +16,10 @@ function initApplication(){
     let log_left_container = document.querySelector('.convert-from');
     let log_right_container = document.querySelector('.convert-to');
     let print_log_container = document.querySelector('.print_log_container');
-    let display_log = document.querySelector(".display-log");
 
 
+
+    /* LOG START */
 
     print_log_container.onclick = function (event) {
 
@@ -28,16 +28,56 @@ function initApplication(){
             return;
         }
 
+        //get log obj
         let log_id = element.value;
+        let row;
 
         for(let x of data){
             if(x.id === log_id) {
-                log_left_container.querySelector('textarea').value = x.input;
-                log_right_container.querySelector('textarea').value = x.output;
+                row = x;
             }
         }
+
+        change(row);
     }
 
+    function change(obj){
+
+        log_left_container.querySelector('textarea').value = obj.input;
+        log_right_container.querySelector('textarea').innerHTML = obj.output;
+
+        switch (parseInt(obj.parseType)){
+            case 0:
+                log_left_container.querySelector('img').src="./img/json_icon.png";
+                log_left_container.querySelector('h2').innerHTML = "JSON";
+
+                log_right_container.querySelector('img').src="./img/yaml_icon.png";
+                log_right_container.querySelector('h2').innerHTML = "YAML";
+
+                break;
+            case 1:
+                log_left_container.querySelector('img').src="./img/yaml_icon.png";
+                log_left_container.querySelector('h2').innerHTML = "YAML";
+
+                log_right_container.querySelector('img').src="./img/json_icon.png";
+                log_right_container.querySelector('h2').innerHTML = "JSON";
+
+                break;
+            case 2:
+                log_left_container.querySelector('img').src="./img/json_icon.png";
+                log_left_container.querySelector('h2').innerHTML = "JSON";
+
+                break;
+            case 3:
+
+                log_left_container.querySelector('img').src="./img/yaml_icon.png";
+                log_left_container.querySelector('h2').innerHTML = "YAML";
+
+                break;
+            default:
+                console.log("problem");
+        }
+    }
 
     // Listen for all buttons in Log - left container
     log_left_container.onclick = function (event) {
@@ -78,6 +118,9 @@ function initApplication(){
             default: break;
         }
     }
+
+    /* LOG END */
+
 
     // Listen for all buttons in Parse - left container
     left_container.onclick = function (event) {
@@ -206,6 +249,7 @@ function hideOutput(){
 
 
 function parseInput(){
+    let chb_autoSave = document.querySelector("[type=checkbox]");
 
     if(document.getElementById('container_textarea_yaml').value === ""){return;}
 
@@ -214,7 +258,6 @@ function parseInput(){
     }else{
         JSONtoYAML();
     }
-
 }
 
 function YAMLtoJSON() {
@@ -245,3 +288,24 @@ function JSONtoYAML() {
     let obj = JSON.parse(input);
     output.value = YAML.stringify(obj);
 }
+
+function get_input(){
+    return document.getElementById('container_textarea_yaml').value;
+}
+
+function get_output(){
+    return document.getElementById('container_textarea_json').value;
+}
+
+function get_parseType(){
+    return document.getElementById("rb-json").checked ? 0 : 1;
+}
+
+/* Търсим начин да запишем стойностите на парсването в базата данни
+    1) Не можем да направим submit едновременно.
+    2) При последователен submit без ajax стойностите се губят за втория submit.
+
+submitForms = function(){
+    document.forms["form1"].submit();
+}
+*/

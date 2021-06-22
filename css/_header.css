@@ -1,20 +1,28 @@
 header{
     display: grid;
-    grid-template-columns: 20vw 55vw 25vw;
+    grid-template-columns: 25vw 50vw 25vw;
     grid-template-rows: 6vh;
     grid-template-areas:
-        "logo nav-menu user";
+    "logo nav-menu user";
 
     padding-left: 30px;
 }
 
-.logo{ grid-area: logo; }
-.nav-menu{ grid-area: nav-menu; }
-.user{ grid-area: user; }
+.logo {
+    grid-area: logo;
+}
+
+.nav-menu {
+    grid-area: nav-menu;
+}
+
+.user {
+    grid-area: user;
+}
 
 .logo,
 .nav-menu,
-.user{
+.user {
     display: inline-flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -22,27 +30,26 @@ header{
 }
 
 .logo,
-.nav-menu{
+.nav-menu {
     justify-content: left;
 }
 
-.user{
+.user {
     justify-content: center;
+    padding-right: 30px;
 }
 
-header{
+header {
     background-color: var(--background-color);
 }
 
-header *{
+header * {
     color: var(--text-color);
     font-weight: var(--font-weight);
     font-size: var(--font-size);
 }
 
 header a:hover,
-header a:active{
+header a:active {
     margin-top: -5px;
 }
-
-

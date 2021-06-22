@@ -107,3 +107,12 @@
 .convert-to{
     grid-area: convert-to;
 }
+
+.load_test_buttons{
+    padding: 20px 0px;
+}
+
+.print_log_container{
+    height: 70%;
+    overflow: auto;
+}

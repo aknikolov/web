@@ -35,10 +35,10 @@ class Db
         return $stmt->fetchAll();
     }
 
-    public function addNewConversion($userId, $input, $output, $toJSON, $toYAML) {
-        $sql = "INSERT INTO `conversions` VALUES(id,?,?,?,?,?)";
+    public function addNewConversion($userId, $input, $output, $parseType) {
+        $sql = "INSERT INTO `conversions` VALUES(id,?,?,?,?)";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt -> execute([$userId, $input, $output, $toJSON, $toYAML]);
+        $stmt -> execute([$userId, $input, $output, $parseType]);
     }
 
 

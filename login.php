@@ -10,7 +10,7 @@
     <h2>Login</h2>
 </div>
 
-<form id="form--login" method="post" action="login.php">
+<form id="form-login" method="post" action="login.php">
     <?php include('errors.php'); ?>
     <div class="input-group">
         <label>Username</label>

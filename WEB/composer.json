@@ -1,7 +1,0 @@
-{
-    "require": {
-        "symfony/yaml": "^5.3",
-      "ext-yaml": "*",
-      "ext-json": "*"
-    }
-}

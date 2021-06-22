@@ -1,9 +1,9 @@
 main{
     display: grid;
-    grid-template-columns: 20vw 60vw 20vw;
+    grid-template-columns: 15vw 70vw 15vw;
     grid-template-rows: 80vh;
     grid-template-areas:
-            ". parser aside";
+            ". parser .";
 
     grid-row-gap: 50px;
     grid-column-gap: 10px;
@@ -11,8 +11,4 @@ main{
     padding-top: 50px;
 }
 
-aside{ grid-area: aside; }
-footer{ grid-area: footer;}
 .parser{ grid-area: parser; }
-.about-us{ grid-area: about-us; }
-

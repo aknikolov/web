@@ -1,12 +1,11 @@
-@import "_header.css";
+@import "_login_registration.css";
 @import "_log.css";
+@import "_header.css";
 @import "_main.css";
 @import "_parser.css";
 @import "_modules.css";
-@import "_aside.css";
-@import "_login_registration.css";
 
-
+/* глобални променливи за темата (фон, ... ) */
 :root {
     --background-color: #CFE4F2;
     --text-color: #333;
@@ -24,6 +23,7 @@
     box-sizing: border-box;
 }
 
+/* prevent x-scroll */
 html,body
 {
     width: 100%;

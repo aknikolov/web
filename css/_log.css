@@ -14,6 +14,7 @@
 .display-log{
     display: grid;
     grid-template-columns: auto auto auto auto auto;
+    grid-template-rows: 100%;
     grid-template-areas:
         ". convert-from convert-to log .";
     z-index: 3;

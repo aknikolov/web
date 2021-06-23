@@ -12,17 +12,49 @@ if (isset($_GET['logout'])) {
     header("location: login.php");
 }
 
-/* Пробно записване на данни от парсъра
+$data = "";
+$input = "";
+$output= "";
+$autoSave = "off";
+$type = null;
+$parse = "";
 
-$output = "";
-if(isset($_POST['comments'])){
-    $comments = $_POST['comments'];
+if(isset($_POST['input'])){
+    $input = $_POST['input'];
 }
 
 if(isset($_POST['output'])){
-    $comments = $_POST['output'];
+    $output = $_POST['output'];
 }
-*/
+
+if(isset($_POST['autoSave'])){
+    $autoSave = $_POST['autoSave'];
+}
+
+if(isset($_POST['autoSave'])){
+    $parse = $_POST['parse-to'];
+}
+
+if($autoSave === "on"){
+    $id = end($_SESSION['id']);
+    require_once("dbconnection.php");
+    $db = new Db;
+
+    if($parse == "yaml"){
+        $type = 1;
+    }else{
+        $type = 0;
+    }
+
+    $db->addNewConversion($id, $input, $output, $type);
+}
+
+if(isset($_POST['clear'])){
+    $id = end($_SESSION['id']);
+    require_once("dbconnection.php");
+    $db = new Db;
+    $db->deleteAllConversionsByUserId($id);
+}
 
 ?>
 <!DOCTYPE html>
@@ -48,7 +80,7 @@ if(isset($_POST['output'])){
     <script defer type="text/javascript" src="./JS/script.js"></script>
 
 </head>
-<body>
+<body onload="checkType()">
 
 <!-- Popup прозорец за историята на потребителя, пуска се от View LOG -->
 <div class="overlay" id="overL" style="display: none">
@@ -82,15 +114,19 @@ if(isset($_POST['output'])){
                        switch($log['parseType']){
                            case 0:
                                $parseType = "JSON to YAML";
+                               $type = 0;
                                break;
                            case 1:
                                $parseType = "YAML to JSON";
+                               $type = 1;
                                break;
                            case 2:
                                $parseType = "Prettify JSON";
+                               $type = 2;
                                break;
                            case 3:
                                $parseType = "Prettify YAML";
+                               $type = 3;
                                break;
                            default:
                                $parseType = "Wrong parse type!";
@@ -117,10 +153,10 @@ if(isset($_POST['output'])){
                             ?>;
                     </script>
             </div>
-            <div class="log-other-options-container">
+            <form id="form2" method="post" class="log-other-options-container">
                 <button id="download-log"><i class="fa fa-download"></i> download log</button>
-                <button id="clear-log" onclick="alert('Do you want to continue?')">clear log</button>
-            </div>
+                <button id="clear-log" name="clear">clear log</button>
+            </form>
         </div>
 
         <!--Лява колона-->
@@ -173,90 +209,95 @@ if(isset($_POST['output'])){
 </header>
 
 <main>
-    <section class="parser">
-        <!-- Заглавие + бутон за View LOG -->
-        <div class="info-block">
-            <h1>YAML/JSON Parser</h1>
-            <p>Let`s parse some code!</p>
-            <button id="log-button" onclick="display_log()">View LOG <i class="fa fa-history"></i></button>
-        </div>
-
-        <!-- Бутони и настройки: Parse, Auto save checkbox -->
-        <div class="mid-block">
-            <button onclick="parseInput(); submitForms();" class="parse-button">Parse <i class="fa fa-arrow-right"></i></button>
-            <label for="auto_save">Auto Save</label>
-            <input id="auto_save" type="checkbox">
-        </div>
-
-        <div class="parser-left-block" >
-            <div class="parser-header">
-                <h3>Input:</h3>
-                <label for="rb-yaml">
-                    <img height="40px" src="./img/yaml_icon.png" alt="yaml_logo">
-                    <p>YAML</p>
-                </label>
-                <input onclick="hideOutput()" type="radio" id="rb-yaml" name="parse-to" value="yaml" checked>
-                <label for="rb-json">
-                    <img height="40px" src="./img/json_icon.png" alt="yaml_logo">
-                    <p>JSON</p>
-                </label>
-                <input onclick="hideOutput()" type="radio" id="rb-json" name="parse-to" value="json">
-            </div>
-            <div class="parser_options">
-                <button class="copy_btn"><i style="pointer-events:none" class="fa fa-copy"></i></button>
-                <button class="paste_btn"><i style="pointer-events:none" class="fa fa-paste"></i></button>
-                <button class="clear_btn"><i style="pointer-events:none" class="fa fa-times"></i></button>
-                <button class="download_btn"><i style="pointer-events:none" class="fa fa-download"></i></button>
-            </div>
-            <!-- Тествахме пращането на данни с форма
-            <form id="form1" action="" method="get">
-                <label>Additional Comments:</label><br>
-                <textarea id="container_textarea_yaml" name="comments" id="para1">
-                </textarea>
-                <input type="submit" name="button" value="Submit"/>
-            </form>
-            -->
-
-            <textarea id="container_textarea_yaml"></textarea>
-
-        </div>
-
-        <div class="parser-right-block">
-            <div class="parser-header">
-                <h3>Output:</h3>
-                <img id="json-img" class="parser-hide-json"  height="40px" src="./img/json_icon.png" alt="yaml_logo">
-                <p id="json-h" class="parser-hide-json" >JSON</p>
-                <img id= "yaml-img" class="parser-hide-yaml" height="40px" src="./img/yaml_icon.png" alt="yaml_logo">
-                <p id = "yaml-h" class="parser-hide-yaml">YAML</p>
-            </div>
-            <div class="parser_options">
-                <button class="copy_btn"><i style="pointer-events:none" class="fa fa-copy"></i></button>
-                <button class="paste_btn"><i style="pointer-events:none" class="fa fa-paste"></i></button>
-                <button class="clear_btn"><i style="pointer-events:none" class="fa fa-times"></i></button>
-                <button class="download_btn"><i style="pointer-events:none" class="fa fa-download"></i></button>
+        <form id="form1" class="parser" method="post">
+            <!-- Заглавие + бутон за View LOG -->
+            <div class="info-block">
+                <h1>YAML/JSON Parser</h1>
+                <p>Let`s parse some code!</p>
+                <button type="button" id="log-button" onclick="display_log()">View LOG <i class="fa fa-history"></i></button>
             </div>
 
-                <!-- download functionality needs php -> form -> submit
-                <div class="download_popup">
-                    <button type="submit">get file</button>
-                    <div>
-                        <label for="link">Share Link</label>
-                        <input id="link" type="text">
-                    </div>
+            <!-- Бутони и настройки: Parse, Auto save checkbox -->
+            <div class="mid-block">
+                <button onclick="parseInput(); submitForm();" class="parse-button">Parse <i class="fa fa-arrow-right"></i></button>
+                <label for="auto_save">Save</label>
+                <input id="auto_save" type="checkbox" name="autoSave">
+            </div>
+
+            <div class="parser-left-block" >
+                <div class="parser-header">
+                    <h3>Input:</h3>
+                    <label for="rb-yaml">
+                        <img height="40px" src="./img/yaml_icon.png" alt="yaml_logo">
+                        <p>YAML</p>
+                    </label>
+                    <input onclick="hideOutput()" type="radio" id="rb-yaml" name="parse-to" value="yaml">
+                    <label for="rb-json">
+                        <img height="40px" src="./img/json_icon.png" alt="yaml_logo">
+                        <p>JSON</p>
+                    </label>
+                    <input onclick="hideOutput()" type="radio" id="rb-json" name="parse-to" value="json">
                 </div>
-                -->
+                <div class="parser_options">
+                    <button class="copy_btn"><i style="pointer-events:none" class="fa fa-copy"></i></button>
+                    <button class="paste_btn"><i style="pointer-events:none" class="fa fa-paste"></i></button>
+                    <button class="clear_btn"><i style="pointer-events:none" class="fa fa-times"></i></button>
+                    <button class="download_btn"><i style="pointer-events:none" class="fa fa-download"></i></button>
+                </div>
                 <!-- Тествахме пращането на данни с форма
-                <form id="form2" action="" method="get">
+                <form id="form1" action="" method="get">
                     <label>Additional Comments:</label><br>
-                    <textarea  id="container_textarea_json" name="output">
+                    <textarea id="container_textarea_yaml" name="comments" id="para1">
                     </textarea>
                     <input type="submit" name="button" value="Submit"/>
                 </form>
                 -->
 
-            <textarea id="container_textarea_json"></textarea>
-        </div>
-    </section>
+                <textarea id="container_textarea_yaml" name="input"><?php
+                    echo $input;
+                ?></textarea>
+                <?=$autoSave?>
+
+            </div>
+
+            <div class="parser-right-block">
+                <div class="parser-header">
+                    <h3>Output:</h3>
+                    <img id="json-img" class="parser-hide-json"  height="40px" src="./img/json_icon.png" alt="yaml_logo">
+                    <p id="json-h" class="parser-hide-json" >JSON</p>
+                    <img id= "yaml-img" class="parser-hide-yaml" height="40px" src="./img/yaml_icon.png" alt="yaml_logo">
+                    <p id = "yaml-h" class="parser-hide-yaml">YAML</p>
+                </div>
+                <div class="parser_options">
+                    <button class="copy_btn"><i style="pointer-events:none" class="fa fa-copy"></i></button>
+                    <button class="paste_btn"><i style="pointer-events:none" class="fa fa-paste"></i></button>
+                    <button class="clear_btn"><i style="pointer-events:none" class="fa fa-times"></i></button>
+                    <button class="download_btn"><i style="pointer-events:none" class="fa fa-download"></i></button>
+                </div>
+
+                    <!-- download functionality needs php -> form -> submit
+                    <div class="download_popup">
+                        <button type="submit">get file</button>
+                        <div>
+                            <label for="link">Share Link</label>
+                            <input id="link" type="text">
+                        </div>
+                    </div>
+                    -->
+                    <!-- Тествахме пращането на данни с форма
+                    <form id="form2" action="" method="get">
+                         <label>Additional Comments:</label><br>
+                        <textarea  id="container_textarea_json" name="output">
+                        </textarea>
+                        <input type="submit" name="button" value="Submit"/>
+                    </form>
+                    -->
+
+                <textarea id="container_textarea_json" name="output"><?php
+                    echo $output
+                ?></textarea>
+            </div>
+        </form>
 </main>
 </body>
 </html>

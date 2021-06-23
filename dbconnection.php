@@ -36,7 +36,7 @@ class Db
     }
 
     public function addNewConversion($userId, $input, $output, $parseType) {
-        $sql = "INSERT INTO `conversions` VALUES(id,?,?,?,?)";
+        $sql = "INSERT INTO `conversions` VALUES(id,?,?,?,?,current_timestamp)";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt -> execute([$userId, $input, $output, $parseType]);
     }
@@ -94,4 +94,5 @@ class Db
         $stmt -> execute([$userId]);
     }
 }
+
 ?>

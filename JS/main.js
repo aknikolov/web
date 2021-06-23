@@ -304,8 +304,33 @@ function get_parseType(){
 /* Търсим начин да запишем стойностите на парсването в базата данни
     1) Не можем да направим submit едновременно.
     2) При последователен submit без ajax стойностите се губят за втория submit.
+ */
 
-submitForms = function(){
-    document.forms["form1"].submit();
+function submitForm(){
+    let form = document.querySelector('#form1');
+
+    form.submit();
 }
-*/
+
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+function checkType() {
+    let rb_json = document.querySelector('#rb-json');
+    let rb_yaml= document.querySelector('#rb-yaml');
+
+    let input = document.querySelector('#container_textarea_yaml');
+
+    if(IsJsonString(input.value)){
+        rb_json.checked = true;
+    }else{
+        rb_yaml.checked = true;
+    }
+
+}

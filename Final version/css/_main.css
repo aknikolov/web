@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 main{
     display: grid;
     grid-template-columns: 10vw 80vw 10vw;
@@ -34,19 +33,3 @@ footer{
     padding: 10px;
     width: 100vw;
 }
-=======
-main{
-    display: grid;
-    grid-template-columns: 15vw 70vw 15vw;
-    grid-template-rows: 80vh;
-    grid-template-areas:
-            ". parser .";
-
-    grid-row-gap: 50px;
-    grid-column-gap: 10px;
-
-    padding-top: 50px;
-}
-
-.parser{ grid-area: parser; }
->>>>>>> bf985c2483e17f63d34feb2d6528927c99caad1e

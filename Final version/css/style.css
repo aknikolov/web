@@ -1,0 +1,31 @@
+@import "_login_registration.css";
+@import "_log.css";
+@import "_header.css";
+@import "_main.css";
+@import "_parser.css";
+@import "_modules.css";
+
+/* глобални променливи за темата (фон, ... ) */
+:root {
+    --background-color: #CFE4F2;
+    --text-color: #333;
+    --font-weight: 500;
+    --font-size: 15px;
+}
+
+*{
+    font-family: Montserrat, serif;
+    font-weight: 400;
+    text-decoration: none;
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* prevent x-scroll */
+html,body
+{
+    width: 100%;
+    overflow-x: hidden;
+}

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 CREATE DATABASE web_db;
 
 CREATE TABLE conversions (
@@ -18,23 +17,4 @@ CREATE TABLE users (
   password varchar(32) NOT NULL,
   id int(10) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY(id)
-=======
-CREATE DATABASE web_db;
-
-CREATE TABLE conversions (
-  id int(10) NOT NULL AUTO_INCREMENT,
-  userId int(10) NOT NULL,
-  input text NOT NULL,
-  output text NOT NULL,
-  parseType tinyint(1) NOT NULL,
-  timestamp date NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-CREATE TABLE users (
-  username varchar(32) NOT NULL,
-  email varchar(50) NOT NULL,
-  password varchar(32) NOT NULL,
-  id int(10) NOT NULL AUTO_INCREMENT 
->>>>>>> bf985c2483e17f63d34feb2d6528927c99caad1e
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

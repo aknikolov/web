@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 textarea{
     height: 80%;
     padding: 5px;
@@ -13,4 +14,21 @@ textarea{
 
 textarea:focus{
     outline: none;
+=======
+textarea{
+    height: 80%;
+    padding: 5px;
+    overflow-y: auto;
+    resize: none;
+
+}
+
+.parser textarea{
+    border: 1px #EFEFEF;
+    border-style: none solid solid solid;
+}
+
+textarea:focus{
+    outline: none;
+>>>>>>> bf985c2483e17f63d34feb2d6528927c99caad1e
 }

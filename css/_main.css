@@ -1,9 +1,10 @@
 main{
     display: grid;
-    grid-template-columns: 15vw 70vw 15vw;
-    grid-template-rows: 80vh;
+    grid-template-columns: 10vw 80vw 10vw;
+    grid-template-rows: 80vh auto;
     grid-template-areas:
-            ". parser .";
+            ". parser ."
+            ". about-us .";
 
     grid-row-gap: 50px;
     grid-column-gap: 10px;
@@ -12,3 +13,23 @@ main{
 }
 
 .parser{ grid-area: parser; }
+#about-us{
+    grid-area: about-us;
+    background-color: var(--background-color);
+    padding: 20px;
+    margin-bottom: 50px;
+}
+
+#about-us >*{
+    margin-bottom: 20px;
+}
+
+#about-us ul{
+    padding-left: 20px;
+}
+
+footer{
+    background-color: var(--background-color);
+    padding: 10px;
+    width: 100vw;
+}

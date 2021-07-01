@@ -15,9 +15,15 @@ if (isset($_GET['logout'])) {
 $data = "";
 $input = "";
 $output= "";
-$autoSave = "off";
 $type = null;
 $parse = "";
+$autoSave = false;
+
+if(isset($_POST['config'])) {
+    $config = yaml_parse($_POST['config']);
+
+    $autoSave = $config["save"];
+}
 
 if(isset($_POST['input'])){
     $input = $_POST['input'];
@@ -27,15 +33,16 @@ if(isset($_POST['output'])){
     $output = $_POST['output'];
 }
 
-if(isset($_POST['autoSave'])){
-    $autoSave = $_POST['autoSave'];
+
+
+if(isset($_POST['clear'])){
+    $id = end($_SESSION['id']);
+    require_once("dbconnection.php");
+    $db = new Db;
+    $db->deleteAllConversionsByUserId($id);
 }
 
-if(isset($_POST['autoSave'])){
-    $parse = $_POST['parse-to'];
-}
-
-if($autoSave === "on"){
+if($autoSave){
     $id = end($_SESSION['id']);
     require_once("dbconnection.php");
     $db = new Db;
@@ -49,14 +56,8 @@ if($autoSave === "on"){
     $db->addNewConversion($id, $input, $output, $type);
 }
 
-if(isset($_POST['clear'])){
-    $id = end($_SESSION['id']);
-    require_once("dbconnection.php");
-    $db = new Db;
-    $db->deleteAllConversionsByUserId($id);
-}
-
 ?>
+
 <!DOCTYPE html>
 <html lang="BG">
 
@@ -64,6 +65,7 @@ if(isset($_POST['clear'])){
 
     <title>YAML/JSON Parser</title>
     <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat'>
 
     <!-- трябва интернет (не е локално), в краен вариант ще бъде локално
           !!!Ако няма интернет иконките няма да се заредят
@@ -189,14 +191,13 @@ if(isset($_POST['clear'])){
     </div>
 </div>
 
-<header>
+<header id="header">
     <div class="logo">
         <p>YAML/JSON <b style="font-weight: 900;">Parser</b></p>
     </div>
     <nav class="nav-menu">
-        <a href="">Начало</a>
-        <a href="">Convertor</a>
-        <a href="">За нас</a>
+        <a>Convertor</a>
+        <a>За нас</a>
     </nav>
     <!-- Печати името на потребителя -->
     <div class="user">
@@ -208,8 +209,9 @@ if(isset($_POST['clear'])){
     </div>
 </header>
 
-<main>
-        <form id="form1" class="parser" method="post">
+<main >
+    <form id="form1" method="post"></form>
+            <section class="parser">
             <!-- Заглавие + бутон за View LOG -->
             <div class="info-block">
                 <h1>YAML/JSON Parser</h1>
@@ -218,10 +220,19 @@ if(isset($_POST['clear'])){
             </div>
 
             <!-- Бутони и настройки: Parse, Auto save checkbox -->
-            <div class="mid-block">
+                <div class="mid-block">
+                    <!--<label for="auto_save">Save</label>
+                <input id="auto_save" type="checkbox" name="autoSave">-->
+                <h3>Конфигурация</h3>
+                <textarea id="config_textarea" name="config" form="form1"><?php
+                    $save = $autoSave == 1 ? "yes" : "no";
+                    echo "\n"."save: ". $save;
+                    echo "\n"."prettify: yes";
+                    echo "\n"."uppercase: no";
+                    echo "\n"."lowercase: no"."\n";
+                    ?></textarea>
                 <button onclick="parseInput(); submitForm();" class="parse-button">Parse <i class="fa fa-arrow-right"></i></button>
-                <label for="auto_save">Save</label>
-                <input id="auto_save" type="checkbox" name="autoSave">
+
             </div>
 
             <div class="parser-left-block" >
@@ -239,10 +250,10 @@ if(isset($_POST['clear'])){
                     <input onclick="hideOutput()" type="radio" id="rb-json" name="parse-to" value="json">
                 </div>
                 <div class="parser_options">
-                    <button class="copy_btn"><i style="pointer-events:none" class="fa fa-copy"></i></button>
-                    <button class="paste_btn"><i style="pointer-events:none" class="fa fa-paste"></i></button>
-                    <button class="clear_btn"><i style="pointer-events:none" class="fa fa-times"></i></button>
-                    <button class="download_btn"><i style="pointer-events:none" class="fa fa-download"></i></button>
+                    <button class="copy_btn"><i style="pointer-events:none" class="fa fa-copy"></i> copy</button>
+                    <button class="paste_btn"><i style="pointer-events:none" class="fa fa-paste"></i> paste</button>
+                    <button class="clear_btn"><i style="pointer-events:none" class="fa fa-times"></i> clear</button>
+                    <button class="download_btn"><i style="pointer-events:none" class="fa fa-download"></i> download</button>
                 </div>
                 <!-- Тествахме пращането на данни с форма
                 <form id="form1" action="" method="get">
@@ -253,11 +264,9 @@ if(isset($_POST['clear'])){
                 </form>
                 -->
 
-                <textarea id="container_textarea_yaml" name="input"><?php
+                <textarea id="container_textarea_yaml" name="input" form="form1"><?php
                     echo $input;
                 ?></textarea>
-                <?=$autoSave?>
-
             </div>
 
             <div class="parser-right-block">
@@ -269,10 +278,10 @@ if(isset($_POST['clear'])){
                     <p id = "yaml-h" class="parser-hide-yaml">YAML</p>
                 </div>
                 <div class="parser_options">
-                    <button class="copy_btn"><i style="pointer-events:none" class="fa fa-copy"></i></button>
-                    <button class="paste_btn"><i style="pointer-events:none" class="fa fa-paste"></i></button>
-                    <button class="clear_btn"><i style="pointer-events:none" class="fa fa-times"></i></button>
-                    <button class="download_btn"><i style="pointer-events:none" class="fa fa-download"></i></button>
+                    <button class="copy_btn"><i style="pointer-events:none" class="fa fa-copy"></i> copy</button>
+                    <button class="paste_btn"><i style="pointer-events:none" class="fa fa-paste"></i> paste</button>
+                    <button class="clear_btn"><i style="pointer-events:none" class="fa fa-times"></i> clear</button>
+                    <button class="download_btn"><i style="pointer-events:none" class="fa fa-download"></i> download</button>
                 </div>
 
                     <!-- download functionality needs php -> form -> submit
@@ -293,11 +302,25 @@ if(isset($_POST['clear'])){
                     </form>
                     -->
 
-                <textarea id="container_textarea_json" name="output"><?php
+                <textarea id="container_textarea_json" name="output" form="form1"><?php
                     echo $output
                 ?></textarea>
             </div>
-        </form>
+            </section>
+            <section id="about-us">
+                <h2>За нас</h2>
+                <h3>Участници в проекта:</h3>
+                <ul>
+                    <li>Александър Николов</li>
+                    <li>Елия Младенова</li>
+                    <li>Весела Попова</li>
+                </ul>
+                <h3>Задание:</h3>
+                <p>Да се направи сайт, който след регистрация да може да се пейства (или ъплоудва) изходен файл, да речем yaml и да го преобразува към json и обратно. Резултатният файл да седи в история - ако го запише или по настройка потребителя е записал всяко преобразуване да се записва, като може да добави и коментар към преобразуването и опции (да речем да се подравнява, да се прави в upper-case/cammel-case/shake_case , да се заместват имена на тагове и стойности - ако са конфигурирани (например json:ver ==> yaml:version;) version : 1.0 -> version: latest (1.0->latest))...</p>
+            </section>
 </main>
+<footer>
+    <h4>Проект по WEB, FMI</h4>
+</footer>
 </body>
 </html>
